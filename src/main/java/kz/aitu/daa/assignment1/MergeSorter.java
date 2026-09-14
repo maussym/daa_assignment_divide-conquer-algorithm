@@ -2,10 +2,9 @@ package kz.aitu.daa.assignment1;
 
 /** Merge sort with one reusable buffer and insertion-sort cutoff. */
 public final class MergeSorter {
-    private static final int INSERTION_SORT_CUTOFF = 16;
+    private static final int CUTOFF = 16;
 
-    private MergeSorter() {
-    }
+    private MergeSorter() {}
 
     public static void sort(int[] values) {
         sort(values, new AlgorithmMetrics());
@@ -19,81 +18,35 @@ public final class MergeSorter {
             return;
         }
 
-        int[] buffer = new int[values.length];
-        metrics.allocation();
-        mergeSort(values, buffer, 0, values.length, 1, metrics);
+        mergeSort(values, new int[values.length], 0, values.length, 1, metrics);
     }
 
-    private static void mergeSort(
-            int[] values,
-            int[] buffer,
-            int left,
-            int right,
-            int depth,
-            AlgorithmMetrics metrics) {
+    private static void mergeSort(int[] a, int[] buffer, int left, int right,
+                                  int depth, AlgorithmMetrics metrics) {
         metrics.recursiveCall(depth);
-        int length = right - left;
-        if (length <= 1) {
-            return;
-        }
-        if (length <= INSERTION_SORT_CUTOFF) {
-            insertionSort(values, left, right, metrics);
+        if (right - left <= CUTOFF) {
+            ArrayTools.insertionSort(a, left, right - 1, metrics);
             return;
         }
 
-        int mid = left + length / 2;
-        mergeSort(values, buffer, left, mid, depth + 1, metrics);
-        mergeSort(values, buffer, mid, right, depth + 1, metrics);
+        int mid = (left + right) >>> 1;
+        mergeSort(a, buffer, left, mid, depth + 1, metrics);
+        mergeSort(a, buffer, mid, right, depth + 1, metrics);
 
-        // Already ordered: skip the merge work.
         metrics.comparison();
-        if (values[mid - 1] <= values[mid]) {
-            return;
-        }
-        merge(values, buffer, left, mid, right, metrics);
+        if (a[mid - 1] > a[mid]) merge(a, buffer, left, mid, right, metrics);
     }
 
-    private static void merge(
-            int[] values,
-            int[] buffer,
-            int left,
-            int mid,
-            int right,
-            AlgorithmMetrics metrics) {
-        System.arraycopy(values, left, buffer, left, right - left);
+    private static void merge(int[] a, int[] buffer, int left, int mid, int right,
+                              AlgorithmMetrics metrics) {
+        System.arraycopy(a, left, buffer, left, right - left);
 
-        int i = left;
-        int j = mid;
-        int out = left;
+        int i = left, j = mid, k = left;
         while (i < mid && j < right) {
             metrics.comparison();
-            if (buffer[i] <= buffer[j]) {
-                values[out++] = buffer[i++];
-            } else {
-                values[out++] = buffer[j++];
-            }
+            a[k++] = buffer[i] <= buffer[j] ? buffer[i++] : buffer[j++];
         }
-        while (i < mid) {
-            values[out++] = buffer[i++];
-        }
-        while (j < right) {
-            values[out++] = buffer[j++];
-        }
-    }
-
-    private static void insertionSort(int[] values, int left, int right, AlgorithmMetrics metrics) {
-        for (int i = left + 1; i < right; i++) {
-            int key = values[i];
-            int j = i - 1;
-            while (j >= left) {
-                metrics.comparison();
-                if (values[j] <= key) {
-                    break;
-                }
-                values[j + 1] = values[j];
-                j--;
-            }
-            values[j + 1] = key;
-        }
+        while (i < mid) a[k++] = buffer[i++];
+        while (j < right) a[k++] = buffer[j++];
     }
 }

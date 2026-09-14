@@ -11,10 +11,6 @@ public final class Main {
             Experiment.main(Arrays.copyOfRange(args, 1, args.length));
             return;
         }
-        if (args.length > 0 && "selftest".equalsIgnoreCase(args[0])) {
-            SelfTest.main(Arrays.copyOfRange(args, 1, args.length));
-            return;
-        }
 
         int[] mergeInput = {8, 3, 5, 1, 7, 2, 2};
         MergeSorter.sort(mergeInput);

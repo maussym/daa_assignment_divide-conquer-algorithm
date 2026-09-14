@@ -29,10 +29,7 @@ public final class ClosestPairSolver {
         Point[] ordered = points.clone();
         Arrays.sort(ordered, BY_X);
 
-        // Reuse one buffer for merging by y and building the strip.
         Point[] buffer = new Point[points.length];
-        metrics.allocations(2);
-
         return closest(ordered, buffer, 0, ordered.length, 1, metrics);
     }
 

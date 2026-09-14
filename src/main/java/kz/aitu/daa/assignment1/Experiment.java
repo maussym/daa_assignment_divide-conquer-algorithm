@@ -27,13 +27,13 @@ public final class Experiment {
         warmUpJvm();
 
         List<String> rows = new ArrayList<>();
-        rows.add("algorithm,input_type,n,time_ns,max_recursion_depth,comparisons,swaps,recursive_calls,allocations");
+        rows.add("algorithm,input_type,n,time_ns,max_recursion_depth,comparisons,recursive_calls");
 
         for (int n : SORT_SIZES) {
             for (String type : INPUT_TYPES) {
                 int[] base = generateArray(n, type, 1000L + n + type.hashCode());
-                rows.add(runMergeSort(base, type));
-                rows.add(runQuickSort(base, type));
+                rows.add(runSort(base, type, true));
+                rows.add(runSort(base, type, false));
             }
         }
 
@@ -51,7 +51,8 @@ public final class Experiment {
 
         Path output = Path.of("results", "results.csv");
         Files.createDirectories(output.getParent());
-        Files.write(output, rows, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        Files.writeString(output, String.join("\n", rows) + "\n",
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         System.out.println("Wrote " + (rows.size() - 1) + " experiment rows to " + output.toAbsolutePath());
         System.out.println("Each time value is the median of " + REPETITIONS + " runs after a JVM warm-up.");
     }
@@ -66,32 +67,19 @@ public final class Experiment {
         }
     }
 
-    private static String runMergeSort(int[] base, String type) {
+    private static String runSort(int[] base, String type, boolean mergeSort) {
         List<RunResult> runs = new ArrayList<>();
         for (int repetition = 0; repetition < REPETITIONS; repetition++) {
             int[] values = base.clone();
             AlgorithmMetrics metrics = new AlgorithmMetrics();
             long start = System.nanoTime();
-            MergeSorter.sort(values, metrics);
+            if (mergeSort) MergeSorter.sort(values, metrics);
+            else QuickSorter.sort(values, metrics);
             long elapsed = System.nanoTime() - start;
             verifySorted(values);
             runs.add(new RunResult(elapsed, metrics));
         }
-        return row("MergeSort", type, base.length, median(runs));
-    }
-
-    private static String runQuickSort(int[] base, String type) {
-        List<RunResult> runs = new ArrayList<>();
-        for (int repetition = 0; repetition < REPETITIONS; repetition++) {
-            int[] values = base.clone();
-            AlgorithmMetrics metrics = new AlgorithmMetrics();
-            long start = System.nanoTime();
-            QuickSorter.sort(values, metrics);
-            long elapsed = System.nanoTime() - start;
-            verifySorted(values);
-            runs.add(new RunResult(elapsed, metrics));
-        }
-        return row("QuickSort", type, base.length, median(runs));
+        return row(mergeSort ? "MergeSort" : "QuickSort", type, base.length, median(runs));
     }
 
     private static String runSelect(int[] base, String type) {
@@ -147,9 +135,7 @@ public final class Experiment {
                 Long.toString(result.timeNs()),
                 Integer.toString(metrics.getMaxRecursionDepth()),
                 Long.toString(metrics.getComparisons()),
-                Long.toString(metrics.getSwaps()),
-                Long.toString(metrics.getRecursiveCalls()),
-                Long.toString(metrics.getAllocations()));
+                Long.toString(metrics.getRecursiveCalls()));
     }
 
     static int[] generateArray(int n, String type, long seed) {

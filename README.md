@@ -23,13 +23,13 @@ assignment1-divide-and-conquer/
 ├── src/
 │   ├── main/java/kz/aitu/daa/assignment1/
 │   │   ├── AlgorithmMetrics.java
+│   │   ├── ArrayTools.java
 │   │   ├── MergeSorter.java
 │   │   ├── QuickSorter.java
 │   │   ├── DeterministicSelector.java
 │   │   ├── ClosestPairSolver.java
 │   │   ├── Point.java
 │   │   ├── Experiment.java
-│   │   ├── SelfTest.java
 │   │   └── Main.java
 │   └── test/java/kz/aitu/daa/assignment1/
 │       ├── SortingTest.java
@@ -53,7 +53,6 @@ Requirements: Java 17+ and Maven.
 ```bash
 mvn test
 mvn exec:java
-mvn exec:java -Dexec.args=selftest
 mvn exec:java -Dexec.args=experiment
 python scripts/plot_results.py
 ```
@@ -233,7 +232,7 @@ The implementation uses `O(n)` auxiliary space for one copied array and one reus
 
 # Correctness Testing
 
-The project contains both JUnit tests and a dependency-free `SelfTest` runner.
+The project uses JUnit tests for correctness checking.
 
 ## Sorting
 
@@ -260,17 +259,6 @@ This exceeds the required minimum of 100 random tests.
 
 For small random datasets, the divide-and-conquer answer is compared with the included `O(n²)` brute-force implementation. A separate test checks the maximum required small-dataset size `n = 2,000`. Duplicate points are also tested and must produce distance `0`.
 
-The local dependency-free verification run produced:
-
-```text
-Sorting reference checks: 40 passed
-Deterministic Select random checks: 150 passed
-Closest Pair brute-force checks: 40 passed
-All self-tests passed.
-```
-
----
-
 # Experimental Method
 
 Timing uses `System.nanoTime()`.
@@ -284,9 +272,7 @@ Recorded metrics:
 - execution time in nanoseconds;
 - maximum recursion depth;
 - comparisons;
-- swaps;
-- recursive calls;
-- selected allocation count where applicable.
+- recursive calls.
 
 All raw values are stored in [`results/results.csv`](results/results.csv).
 
@@ -296,10 +282,10 @@ The table below shows the random-input measurements from the included CSV. Times
 
 | Algorithm | n=100 | n=1,000 | n=10,000 | Largest tested n |
 |---|---:|---:|---:|---:|
-| MergeSort | 0.013 ms | 0.094 ms | 2.061 ms | 5.600 ms at 50,000 |
-| QuickSort | 0.009 ms | 0.145 ms | 2.685 ms | 7.044 ms at 50,000 |
-| Deterministic Select | 0.004 ms | 0.096 ms | 0.908 ms | 2.552 ms at 50,000 |
-| Closest Pair | 0.172 ms | 2.228 ms | 18.740 ms | 36.365 ms at 30,000 |
+| MergeSort | 0.005 ms | 0.125 ms | 1.340 ms | 5.367 ms at 50,000 |
+| QuickSort | 0.003 ms | 0.058 ms | 1.075 ms | 5.355 ms at 50,000 |
+| Deterministic Select | 0.003 ms | 0.064 ms | 0.831 ms | 4.039 ms at 50,000 |
+| Closest Pair | 0.167 ms | 2.161 ms | 22.100 ms | 67.958 ms at 30,000 |
 
 ## Recursion-depth results on random inputs
 
@@ -384,10 +370,6 @@ Program output and correctness-check screenshots are stored in `docs/screenshots
 ### Program output
 
 ![Program output](docs/screenshots/program_output.png)
-
-### Correctness checks
-
-![Self-test output](docs/screenshots/selftest_output.png)
 
 ### Maven test results
 
