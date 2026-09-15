@@ -25,7 +25,7 @@ public final class MergeSorter {
                                   int depth, AlgorithmMetrics metrics) {
         metrics.recursiveCall(depth);
         if (right - left <= CUTOFF) {
-            ArrayTools.insertionSort(a, left, right - 1, metrics);
+            ArrayTools.insertionSort(a, left, right - 1);
             return;
         }
 
@@ -33,7 +33,6 @@ public final class MergeSorter {
         mergeSort(a, buffer, left, mid, depth + 1, metrics);
         mergeSort(a, buffer, mid, right, depth + 1, metrics);
 
-        metrics.comparison();
         if (a[mid - 1] > a[mid]) merge(a, buffer, left, mid, right, metrics);
     }
 
@@ -43,7 +42,6 @@ public final class MergeSorter {
 
         int i = left, j = mid, k = left;
         while (i < mid && j < right) {
-            metrics.comparison();
             a[k++] = buffer[i] <= buffer[j] ? buffer[i++] : buffer[j++];
         }
         while (i < mid) a[k++] = buffer[i++];

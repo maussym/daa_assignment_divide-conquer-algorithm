@@ -1,11 +1,26 @@
 package kz.aitu.daa.assignment1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Random;
 import org.junit.jupiter.api.Test;
 
 class ClosestPairSolverTest {
+    @Test
+    void worksForTwoPoints() {
+        Point[] points = {new Point(0, 0), new Point(3, 4)};
+        assertEquals(5.0, ClosestPairSolver.solve(points).distance(), 0.0);
+    }
+
+    @Test
+    void rejectsFewerThanTwoPoints() {
+        assertThrows(IllegalArgumentException.class,
+                () -> ClosestPairSolver.solve(new Point[0]));
+        assertThrows(IllegalArgumentException.class,
+                () -> ClosestPairSolver.solve(new Point[]{new Point(1, 1)}));
+    }
+
     @Test
     void findsSimpleClosestPair() {
         Point[] points = {

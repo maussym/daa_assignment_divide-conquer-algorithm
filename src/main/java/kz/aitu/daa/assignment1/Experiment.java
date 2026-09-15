@@ -27,7 +27,7 @@ public final class Experiment {
         warmUpJvm();
 
         List<String> rows = new ArrayList<>();
-        rows.add("algorithm,input_type,n,time_ns,max_recursion_depth,comparisons,recursive_calls");
+        rows.add("algorithm,input_type,n,time_ns,max_recursion_depth,recursive_calls");
 
         for (int n : SORT_SIZES) {
             for (String type : INPUT_TYPES) {
@@ -134,7 +134,6 @@ public final class Experiment {
                 Integer.toString(n),
                 Long.toString(result.timeNs()),
                 Integer.toString(metrics.getMaxRecursionDepth()),
-                Long.toString(metrics.getComparisons()),
                 Long.toString(metrics.getRecursiveCalls()));
     }
 

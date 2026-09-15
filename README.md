@@ -257,7 +257,7 @@ This exceeds the required minimum of 100 random tests.
 
 ## Closest Pair
 
-For small random datasets, the divide-and-conquer answer is compared with the included `O(n²)` brute-force implementation. A separate test checks the maximum required small-dataset size `n = 2,000`. Duplicate points are also tested and must produce distance `0`.
+For small random datasets, the divide-and-conquer answer is compared with the included `O(n²)` brute-force implementation. A separate test checks the maximum required size `n = 2,000`. Tests also cover two points, duplicate points, and invalid inputs with fewer than two points.
 
 # Experimental Method
 
@@ -271,7 +271,6 @@ Recorded metrics:
 
 - execution time in nanoseconds;
 - maximum recursion depth;
-- comparisons;
 - recursive calls.
 
 All raw values are stored in [`results/results.csv`](results/results.csv).
@@ -282,10 +281,10 @@ The table below shows the random-input measurements from the included CSV. Times
 
 | Algorithm | n=100 | n=1,000 | n=10,000 | Largest tested n |
 |---|---:|---:|---:|---:|
-| MergeSort | 0.005 ms | 0.125 ms | 1.340 ms | 5.367 ms at 50,000 |
-| QuickSort | 0.003 ms | 0.058 ms | 1.075 ms | 5.355 ms at 50,000 |
-| Deterministic Select | 0.003 ms | 0.064 ms | 0.831 ms | 4.039 ms at 50,000 |
-| Closest Pair | 0.167 ms | 2.161 ms | 22.100 ms | 67.958 ms at 30,000 |
+| MergeSort | 0.007 ms | 0.128 ms | 1.415 ms | 5.443 ms at 50,000 |
+| QuickSort | 0.014 ms | 0.183 ms | 1.377 ms | 7.611 ms at 50,000 |
+| Deterministic Select | 0.001 ms | 0.037 ms | 0.779 ms | 2.345 ms at 50,000 |
+| Closest Pair | 0.092 ms | 0.990 ms | 10.374 ms | 33.694 ms at 30,000 |
 
 ## Recursion-depth results on random inputs
 

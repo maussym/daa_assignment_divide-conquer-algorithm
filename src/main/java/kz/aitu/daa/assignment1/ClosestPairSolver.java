@@ -87,7 +87,6 @@ public final class ClosestPairSolver {
                     break;
                 }
 
-                metrics.comparison();
                 Result candidate = result(buffer[i], buffer[j]);
                 if (candidate.distance() < best.distance()) {
                     best = candidate;
@@ -110,7 +109,6 @@ public final class ClosestPairSolver {
         int out = left;
 
         while (i < mid && j < right) {
-            metrics.comparison();
             if (BY_Y.compare(points[i], points[j]) <= 0) {
                 buffer[out++] = points[i++];
             } else {
@@ -134,7 +132,6 @@ public final class ClosestPairSolver {
         Result best = null;
         for (int i = left; i < right; i++) {
             for (int j = i + 1; j < right; j++) {
-                metrics.comparison();
                 Result candidate = result(points[i], points[j]);
                 if (best == null || candidate.distance() < best.distance()) {
                     best = candidate;

@@ -29,7 +29,7 @@ public final class QuickSorter {
         metrics.recursiveCall(depth);
         while (left < right) {
             int pivot = a[left + random.nextInt(right - left + 1)];
-            ArrayTools.partition(a, left, right, pivot, bounds, metrics);
+            ArrayTools.partition(a, left, right, pivot, bounds);
             int less = bounds[0], greater = bounds[1];
 
             if (less - left < right - greater) {

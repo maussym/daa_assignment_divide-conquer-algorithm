@@ -28,7 +28,7 @@ public final class DeterministicSelector {
         if (left == right) return a[left];
 
         int pivot = medianOfMedians(a, left, right, depth + 1, bounds, metrics);
-        ArrayTools.partition(a, left, right, pivot, bounds, metrics);
+        ArrayTools.partition(a, left, right, pivot, bounds);
         int less = bounds[0], greater = bounds[1];
         if (k < less) return select(a, left, less - 1, k, depth + 1, bounds, metrics);
         if (k > greater) return select(a, greater + 1, right, k, depth + 1, bounds, metrics);
@@ -39,14 +39,14 @@ public final class DeterministicSelector {
                                        int[] bounds, AlgorithmMetrics metrics) {
         int size = right - left + 1;
         if (size <= 5) {
-            ArrayTools.insertionSort(a, left, right, metrics);
+            ArrayTools.insertionSort(a, left, right);
             return a[left + size / 2];
         }
 
         int count = 0;
         for (int start = left; start <= right; start += 5) {
             int end = Math.min(start + 4, right);
-            ArrayTools.insertionSort(a, start, end, metrics);
+            ArrayTools.insertionSort(a, start, end);
             ArrayTools.swap(a, left + count++, (start + end) / 2);
         }
         int middle = left + count / 2;
